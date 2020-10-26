@@ -11,9 +11,6 @@ public class Apple {
 		apple_pos = new Position(50 + rand_x*31 ,50 + rand_y*31);
 	}
 	
-	public void PrintApplePos() {
-		System.out.println("apple_pos:" + apple_pos.getX() + ", " + apple_pos.getY());
-	}
 	
 	public void resetApple(){
 		rand_x = rand.nextInt(17);

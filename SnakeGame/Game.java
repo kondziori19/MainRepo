@@ -20,17 +20,25 @@ public class Game extends JPanel implements ActionListener{
 	private Image body_img;
 	private Image apple_img;
 	private Timer timer;
+	
 	Snake snake = new Snake();
 	Apple apple = new Apple();
-	String keyPressed ="right";
-	private int score=0;
-	private boolean isApple=true;
-	JButton button;
+	
+	private String keyPressed = "right";
+	private int score = 0;
+	private boolean isApple = true;
+	private JButton button;
+	
+	private final int LEFT_BORDER = 50;
+	private final int RIGHT_BORDER = 546;
+	private final int UP_BORDER = 50;
+	private final int DOWN_BORDER = 329;
 	
 	public Game() {
 		super.setLayout(null);
 		super.setDoubleBuffered(true);
 		
+	
 		label = new JLabel("Score: 0");
 		label.setForeground(Color.WHITE);
 		label.setBounds(290, 15, 100, 50);
@@ -100,22 +108,20 @@ public class Game extends JPanel implements ActionListener{
 		ImageIcon ii3 = new ImageIcon(this.getClass().getResource("apple.png"));
 		apple_img = ii3.getImage();
 		
-		g2d.fillRect(0, 0, 640, 480); //	g2d.fillRect(30, 30, 567, 350);
+		g2d.fillRect(0, 0, 640, 480); 	
 		g2d.setColor(lightgreen);
-		g2d.fillRect(50, 50, 527, 310); // g2d.fillRect(50, 50, 527, 310);
+		g2d.fillRect(50, 50, 527, 310); 
 		for(int i=snake.length;i>0;i--) {
 		g2d.drawImage(body_img, snake.tail.get(i).getX(), snake.tail.get(i).getY(), this);
 		}
 		g2d.drawImage(head_img, snake.tail.get(0).getX(), snake.tail.get(0).getY(), this);
-		if(isApple) {
-			g2d.drawImage(apple_img, apple.apple_pos.getX(), apple.apple_pos.getY(), this);
-		}
+		g2d.drawImage(apple_img, apple.apple_pos.getX(), apple.apple_pos.getY(), this);
 		
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		snake.Move(keyPressed);
+		snake.move(keyPressed);
 		detectColision();
 		CheckApple();
 		repaint();
@@ -124,30 +130,30 @@ public class Game extends JPanel implements ActionListener{
 	
 	private void detectColision() {
 		if(
-			snake.tail.get(0).getX()<50  || 
-			snake.tail.get(0).getX()>546 || 
-			snake.tail.get(0).getY()<50  || 
-			snake.tail.get(0).getY()>329
+			snake.tail.get(0).getX() < LEFT_BORDER  || 
+			snake.tail.get(0).getX() > RIGHT_BORDER || 
+			snake.tail.get(0).getY() < UP_BORDER    || 
+			snake.tail.get(0).getY() > DOWN_BORDER
 		) { 
 		timer.stop();
 		}
 		
 		for(int i=1;i<=snake.length;i++) {
 			if(
-				snake.tail.get(0).getX()==snake.tail.get(i).getX() &&
-				snake.tail.get(0).getY()==snake.tail.get(i).getY()
+				snake.tail.get(0).getX() == snake.tail.get(i).getX() &&
+				snake.tail.get(0).getY() == snake.tail.get(i).getY()
 					){
 				timer.stop();
 			}
 		}
 	}
 	
-	private void restart() {
-		snake.tail.get(0).setPos(112, 112);
-		snake.length=2;
-		score=0;
+	public void restart() {
+		snake.tail.get(0).setPos(snake.start_position.getX(), snake.start_position.getY());
+		snake.length = 2;
+		score = 0;
 		refreshScore(score);
-		keyPressed ="right";
+		keyPressed = "right";
 		timer.start();
 	}
 	
@@ -155,8 +161,7 @@ public class Game extends JPanel implements ActionListener{
 		
 		if(snake.tail.get(0).getX() == apple.apple_pos.getX() && snake.tail.get(0).getY() == apple.apple_pos.getY()) {
 			isApple=false;
-			snake.length++;
-			snake.tail.add(new Position());
+			snake.eat();
 			refreshScore(++score);
 		}
 		newApple();
@@ -164,7 +169,7 @@ public class Game extends JPanel implements ActionListener{
 	}
 	
 	private void newApple() {
-		if(isApple==false) {
+		if(isApple == false) {
 			apple.resetApple();
 			while(isOnSnake(apple.apple_pos.getX(), apple.apple_pos.getY())) {
 			apple.resetApple();
@@ -178,8 +183,8 @@ public class Game extends JPanel implements ActionListener{
 	}
 	
 	private boolean isOnSnake(int x, int y) {
-		for(int i=0;i<snake.length;i++) {
-			if(x==snake.tail.get(i).getX() && y==snake.tail.get(i).getY()) {
+		for(int i = 0;i < snake.length;i++) {
+			if(x == snake.tail.get(i).getX() && y == snake.tail.get(i).getY()) {
 				return true;
 			}
 		}
