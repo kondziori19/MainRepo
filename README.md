@@ -1,4 +1,4 @@
 # MainRepo
 
-My first repository./n
+My first repository.  
 Mainly for learning purpose.
