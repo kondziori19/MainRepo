@@ -29,8 +29,8 @@ vector<vector<int>> openMapFile() {
     if (map.is_open()) {
         while (!map.eof()) {
 
-            for (int i = 0; i < 20; i++) {
-                for (int j = 0; j < 20; j++) {
+            for (int i = 0; i < 20; i++) {         //importing map to array
+                for (int j = 0; j < 20; j++) {  
                     map >> cells[i][j];
                 }
             }
@@ -112,18 +112,19 @@ void tracePath(vector<vector<int>> map, Cell cells[][20], int dest_x, int dest_y
 
     while (!(cells[x][y].parentx==x && cells[x][y].parenty == y)) {
 
-        path.push_back(cells[x][y]);
-        int tmp_x = cells[x][y].parentx;
-        int tmp_y = cells[x][y].parenty;
-        x = tmp_x;
-        y = tmp_y;
+          path.push_back(cells[x][y]);
+          int tmp_x = cells[x][y].parentx;
+          int tmp_y = cells[x][y].parenty;
+ 
+          x = tmp_x;
+          y = tmp_y;
 
     }
     path.push_back(cells[x][y]);
    
     for (int i = 0; i < path.size(); i++) {
         map[path[i].x][path[i].y] = 3;
-   //     printf("(%d,%d) ", path[i].x, path[i].y);
+        printf("(%d,%d) ", path[i].x, path[i].y);
     }
     printf("\n");
     print2dVec(map);
@@ -135,6 +136,8 @@ void tracePath(vector<vector<int>> map, Cell cells[][20], int dest_x, int dest_y
 void aStarAlgorithm(vector<vector<int>> map, int start_x, int start_y, int dest_x, int dest_y) {
 
     
+   
+
     if (isBlocked(map, start_x, start_y) == true || isBlocked(map, dest_x, dest_y) == true)
     {
         printf("Start cell or destination cell is blocked.\n"); // cell[x][y] == 5
@@ -142,7 +145,7 @@ void aStarAlgorithm(vector<vector<int>> map, int start_x, int start_y, int dest_
     }
 
 
-    Cell cells[20][20];
+    Cell cells[20][20]; // array with details of a cells
     bool closedList[20][20];
     
     for (int x = 0; x < 20; x++) {              // creating cells array
@@ -155,7 +158,7 @@ void aStarAlgorithm(vector<vector<int>> map, int start_x, int start_y, int dest_
             cells[x][y].x = x;
             cells[x][y].y = y;
 
-            closedList[x][y] = false; // creating closedlist
+            closedList[x][y] = false; // filling closedlist
         }
     }
           
@@ -174,7 +177,7 @@ void aStarAlgorithm(vector<vector<int>> map, int start_x, int start_y, int dest_
            
 
             vector<Cell> openList;
-            openList.push_back(cells[i][j]); 
+            openList.push_back(cells[i][j]); //adding starting cell to openList
             bool dest_found = false;
 
             while (!openList.empty()) {
@@ -193,12 +196,12 @@ void aStarAlgorithm(vector<vector<int>> map, int start_x, int start_y, int dest_
                     RIGHT(i, j + 1)
                     LEFT(i, j - 1)
                     */
-                // 1. UP
+                //  UP
 
                 if (isInRange((i - 1), j) == true) {
-                    if (isDest(i-1, j, dest_x, dest_y)) {
+                    if (isDest((i - 1), j, dest_x, dest_y)) {
                         cells[i - 1][j].parentx = i;
-                        cells[i - 1][j].parenty = i;
+                        cells[i - 1][j].parenty = j;
                         tracePath(map, cells, dest_x, dest_y);
                         dest_found = true;
                         return;
@@ -226,7 +229,7 @@ void aStarAlgorithm(vector<vector<int>> map, int start_x, int start_y, int dest_
                 if (isInRange((i + 1), j) == true) {
                     if (isDest(i + 1, j, dest_x, dest_y)) {
                         cells[i + 1][j].parentx = i;
-                        cells[i + 1][j].parenty = i;
+                        cells[i + 1][j].parenty = j;
                         tracePath(map, cells, dest_x, dest_y);
                         dest_found = true;
                         return;
@@ -254,7 +257,7 @@ void aStarAlgorithm(vector<vector<int>> map, int start_x, int start_y, int dest_
                 if (isInRange(i, (j - 1)) == true) {
                     if (isDest(i, j - 1, dest_x, dest_y)) {
                         cells[i][j - 1].parentx = i;
-                        cells[i][j - 1].parenty = i;
+                        cells[i][j - 1].parenty = j;
                         tracePath(map, cells, dest_x, dest_y);
                         dest_found = true;
                         return;
@@ -315,10 +318,11 @@ void aStarAlgorithm(vector<vector<int>> map, int start_x, int start_y, int dest_
 int main()
 {
     
-    int start_x = 19;
-    int start_y = 0;
+    int start_x = 19; // (0,19)
+    int start_y = 0;  // (0,19)
     int dest_x = 0;
     int dest_y = 19;
+
 
     vector < vector<int>> grid = openMapFile();
 
