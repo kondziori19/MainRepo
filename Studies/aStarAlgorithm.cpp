@@ -124,7 +124,6 @@ void tracePath(vector<vector<int>> map, Cell cells[][20], int dest_x, int dest_y
    
     for (int i = 0; i < path.size(); i++) {
         map[path[i].x][path[i].y] = 3;
-        printf("(%d,%d) ", path[i].x, path[i].y);
     }
     printf("\n");
     print2dVec(map);
@@ -136,7 +135,10 @@ void tracePath(vector<vector<int>> map, Cell cells[][20], int dest_x, int dest_y
 void aStarAlgorithm(vector<vector<int>> map, int start_x, int start_y, int dest_x, int dest_y) {
 
     
-   
+    if (!isInRange(start_x, start_y) || !isInRange(dest_x, dest_y)){
+        printf("Start cell or destination cell is out of range.\n"); 
+            return;
+   }
 
     if (isBlocked(map, start_x, start_y) == true || isBlocked(map, dest_x, dest_y) == true)
     {
@@ -144,6 +146,10 @@ void aStarAlgorithm(vector<vector<int>> map, int start_x, int start_y, int dest_
         return;
     }
 
+    if (start_x == dest_x && start_y == dest_y) {
+        printf("Start cell and destination are placed on the same cell.\n"); 
+        return;
+    }
 
     Cell cells[20][20]; // array with details of a cells
     bool closedList[20][20];
@@ -318,8 +324,8 @@ void aStarAlgorithm(vector<vector<int>> map, int start_x, int start_y, int dest_
 int main()
 {
     
-    int start_x = 19; // (0,19)
-    int start_y = 0;  // (0,19)
+    int start_x = 19; 
+    int start_y = 0;  
     int dest_x = 0;
     int dest_y = 19;
 
